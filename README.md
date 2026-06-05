@@ -40,4 +40,4 @@ Then tell your agent to start a ledger, or just make a decision — the skill su
 
 ## Provenance
 
-Extracted from a production ML pipeline project where the ledger accumulated **169 decisions, 27 deferrals, hypotheses with multi-run test matrices, and paired incident/outage records over ~4 months** of human+agent development. The rules in the skill — ledger-allocated IDs, the OUT⇄INC pairing, append-only with status-line-only edits — each exist because their absence caused a real failure.
+Extracted from a production ML pipeline project where the ledger accumulated **169 decisions, 27 deferrals, hypotheses with multi-run test matrices, and paired incident/outage records over ~4 months** of human+agent development. The rules in the skill — ledger-allocated IDs, the OUT⇄INC pairing, append-only with status-line-only edits — each exists because it solves a real problem in agentic development and operations management.
