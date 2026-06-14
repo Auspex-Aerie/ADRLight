@@ -14,6 +14,7 @@ Classic [Architecture Decision Records](https://cognitect.com/blog/2011/11/15/do
 | **DIS** | A discovery that corrects how an existing signal should be *interpreted* |
 | **INC** | An incident: defect found, root cause, blast radius (*the cause record*) |
 | **OUT** | An outage: severity, duration, damage (*the impact record*) |
+| **BOT** | A human correction: human intuition caught and overrode an AI over-claim or mistake (*"caught the bots"*) |
 
 Entries link into a causal DAG via `triggered_by`, `supersedes`, and `resolves` edges, so "why is the system shaped this way?" is answerable by following edges — by humans or by coding agents, months later.
 
@@ -41,3 +42,5 @@ Then tell your agent to start a ledger, or just make a decision — the skill su
 ## Provenance
 
 Extracted from a production ML pipeline project where the ledger accumulated **169 decisions, 27 deferrals, hypotheses with multi-run test matrices, and paired incident/outage records over ~4 months** of human+agent development. The rules in the skill — ledger-allocated IDs, the OUT⇄INC pairing, append-only with status-line-only edits — each exists because it solves a real problem in agentic development and operations management.
+
+The **BOT** (human-correction) type was added from a sibling research ledger, where human-in-the-loop catches of AI over-claims proved worth recording as first-class, terminal events — the moments a person's intuition overrode confident-but-wrong model output.

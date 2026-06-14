@@ -1,11 +1,11 @@
 ---
 name: adr-light
-description: Maintain a single append-only project decision ledger with typed entries (decisions, deferrals, hypotheses, discoveries, incidents, outages) linked into a causal DAG. Use when the user makes an architectural or policy decision, defers work with a revisit condition, starts a systematic experiment, discovers a misinterpreted signal, investigates a defect or outage, resolves an RFC, says "log this decision" / "ledger this", or asks "why did we choose X" / "what happened with Y".
+description: Maintain a single append-only project decision ledger with typed entries (decisions, deferrals, hypotheses, discoveries, incidents, outages, human corrections) linked into a causal DAG. Use when the user makes an architectural or policy decision, defers work with a revisit condition, starts a systematic experiment, discovers a misinterpreted signal, investigates a defect or outage, corrects an AI over-claim, resolves an RFC, says "log this decision" / "ledger this", or asks "why did we choose X" / "what happened with Y".
 ---
 
 # ADR-Light: The Decision Ledger
 
-One append-only markdown file that records everything that *happened* on a project: decisions, deferrals, hypotheses, discoveries, incidents, and outages — each typed, numbered, and linked into a causal DAG.
+One append-only markdown file that records everything that *happened* on a project: decisions, deferrals, hypotheses, discoveries, incidents, outages, and human corrections — each typed, numbered, and linked into a causal DAG.
 
 This is **not** classic ADRs. ADRs record decisions, one file each. A ledger records *events of every kind that change the project's trajectory*, in one grep-able, diff-able file, with provenance edges (`triggered_by`, `supersedes`, `resolves`) that let you trace *why* the project is shaped the way it is — months later, across hundreds of entries, by humans and agents alike.
 
@@ -22,14 +22,14 @@ If no ledger exists and a decision moment occurs, ask the user before creating o
 ```markdown
 # <Project> Decision Ledger (ADR-light)
 
-Append-only ledger for decisions, deferrals, hypotheses, discoveries, incidents, and outages.
+Append-only ledger for decisions, deferrals, hypotheses, discoveries, incidents, outages, and human corrections.
 
 ---
 
 ## Format
 
 Entry types: DEC (decision), DEF (deferral), HYP (hypothesis), DIS (discovery),
-INC (incident), OUT (outage). Each type has its own number space (DEC-001, DEF-001, ...).
+INC (incident), OUT (outage), BOT (human correction). Each type has its own number space (DEC-001, DEF-001, ...).
 IDs are allocated by appending an entry (or stub) to this file — nowhere else.
 
 Format changes are recorded as dated blockquote notes in this section, never by
@@ -46,6 +46,8 @@ rewriting old entries.
 ## Incidents
 
 ## Decisions
+
+## Human Corrections
 ```
 
 ## Entry Types
@@ -58,6 +60,7 @@ rewriting old entries.
 | **DIS** | An **interpretation correction** — an observation that changes how an existing signal/metric/behavior should be *read*, with no action attached yet | Live observation contradicts assumed semantics | `observed` (terminal; often later cited as `triggered_by` of a DEC) |
 | **INC** | The **cause record** — a defect or design flaw found during live investigation: symptom, root cause, blast radius | Investigation finds the *why* behind observed behavior | `open` → remediated via DEC |
 | **OUT** | The **impact record** — a service-affecting event: severity, duration, damage quantification | Service impact observed | `open` (may be a *live document*) → closed at recovery |
+| **BOT** | A **human correction** — human intuition caught and overrode an AI over-claim or mistake ("caught the bots"); the human-in-the-loop catch recorded as a first-class event | A person pushes back on / corrects something the AI(s) asserted | `logged` (terminal; often later cited as `triggered_by` of a HYP or DEC) |
 
 **RFC** is part of the system but is *not* a ledger entry type — see [RFCs](#rfcs-the-deliberation-layer).
 
@@ -72,6 +75,7 @@ Something happened. What kind of thing?
 ├─ We have a question + candidate fixes to test systematically → HYP
 ├─ We learned a signal doesn't mean what we thought it meant,
 │  but nothing needs to change yet                             → DIS
+├─ A human caught/overrode an AI over-claim or mistake         → BOT
 ├─ We found a defect / design flaw explaining behavior         → INC
 ├─ Service was impacted (downtime, data loss, degradation)     → OUT
 │    └─ Was it caused by a discoverable defect? File the
@@ -204,6 +208,25 @@ Promote to a DEC when a winner is chosen: the DEC's `triggered_by` cites the HYP
   project's outage/incident directory — details live there, not here.
 ```
 
+### BOT
+
+```markdown
+### BOT-001: <the over-claim or mistake the human caught>
+- `id`: BOT-001
+- `date`: 2026-06-05
+- `status`: logged
+- `triggered_by`: the claim/analysis the correction lands on (entry ID, or
+  "live observation: <what the AI asserted>")
+- `claim`: What the AI(s) asserted — the over-claim or error, stated plainly.
+- `correction`: The human's intervention — what they pushed back on, and why.
+- `verified`: What the data/analysis showed afterward (did the correction hold?).
+- `lesson`: The failure mode to watch for next time.
+```
+
+BOT is terminal (`logged`) like DIS: it records the catch, it carries no action
+itself. A BOT commonly reappears as the `triggered_by` of the HYP or DEC the
+correction sets in motion (e.g. a pushback that forces a re-test or a reversal).
+
 ## The Relationship DAG
 
 ```
@@ -249,6 +272,7 @@ Suggest an entry (never auto-append without confirmation) when:
 - Debugging reveals a metric/signal means something different than assumed — DIS
 - A root cause is found — INC
 - Service impact is observed or reported — OUT
+- A human corrects/overrides an AI over-claim or mistake ("caught the bots") — BOT
 - The user says "log this decision", "ledger this", "record why"
 
 When the user asks **"why did we choose X?"** or **"what happened with Y?"** — grep the ledger first (`grep -n "X" decision_log.md`), follow `triggered_by`/`supersedes`/`related` edges, and answer with entry IDs cited.
