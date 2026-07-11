@@ -80,6 +80,12 @@ Something happened. What kind of thing?
 ├─ Service was impacted (downtime, data loss, degradation)     → OUT
 │    └─ Was it caused by a discoverable defect? File the
 │       OUT⇄INC pair (see pairing rule below)
+├─ We measured a RESULT (numbers from a run / experiment)      → not a
+│    free-standing section. File a DIS (if it changes how a signal is
+│    read), append to a HYP's Results block (experiment), or cite it in
+│    `triggered_by:` on the DEC it motivates
+├─ We want to record project STATUS / roadmap / "what's next"  → not a
+│    ledger entry. Mutable state → the work tracker or a handoff doc
 ├─ We discovered additional blocking WORK                      → not a ledger
 │    entry. Work items live in the project's work tracker;
 │    the spawning entry cites them in `impact:` (see Rule 6)
@@ -284,3 +290,4 @@ When the user asks **"why did we choose X?"** or **"what happened with Y?"** —
 - **Status-less drift.** A DEF with no `revisit_when`, a HYP never promoted or closed, an OUT left "live" after recovery. Sweep statuses periodically.
 - **Backfilling silently.** Recording a past decision is fine — date it with the original date and note it's retroactive (`OUT-000a (retroactive)`).
 - **Treating the ledger as documentation.** It records *what changed and why*, not *how things work*. Architecture docs describe the present; the ledger explains how the present came to be.
+- **Free-standing result or status sections.** A prose "Results", "Status", "Progress", or "Next" heading accumulating *outside* a typed entry — the drift that turns a ledger into a journal. A measurement lands as a DIS (interpretation change), a HYP's Results block (experiment), or `triggered_by:` evidence on the DEC it motivated; project status and roadmap are mutable state → the work tracker or a handoff doc (Rule 6). The ledger is typed entries plus the Format section — nothing else.

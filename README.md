@@ -25,6 +25,7 @@ Everything lives in **one grep-able file**. One file means trivial diffs, no ind
 - **The ledger is the durable layer.** RFCs and plans are ephemeral deliberation — they get absorbed and deleted. Ledger entries never do.
 - **INC explains, OUT quantifies.** When a defect causes service impact, both records are filed and cross-referenced, because forensics and damage accounting are separate workstreams that close at different times.
 - **Work items are edges, not entries.** The ledger records events; mutable task state belongs in a tracker.
+- **Results and status are not entries.** A measurement lands as a DIS (or a HYP's results); project status and roadmap live in a tracker or handoff. A free-standing "Results"/"Status"/"Next" section is the drift that turns a ledger into a journal.
 - **The format evolves in-band** via dated format-change notes — old entries are never retrofitted.
 
 ## Install
