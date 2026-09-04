@@ -55,7 +55,7 @@ rewriting old entries.
 | Type | Records | Trigger | Status lifecycle |
 |------|---------|---------|------------------|
 | **DEC** | A decision took effect (architecture, policy, process, schema) | A choice is made; an RFC is resolved; an incident is remediated | `accepted` → `superseded by DEC-###` |
-| **DEF** | A *conscious non-decision* — work judged worthwhile but deferred, with an explicit re-entry condition | "Not now, but revisit when..." | `active` → `resolved by DEC-###` |
+| **DEF** | A *conscious non-decision* — work judged worthwhile but deferred, with an explicit re-entry condition. May carry `priority` (e.g. P1) | "Not now, but revisit when..." | `active` → `resolved by DEC-###` |
 | **HYP** | An open question + candidate interventions + test matrix + results | Systematic experimentation begins (tuning, A/B, performance work) | `open` → promoted to a DEC when a winner is chosen |
 | **DIS** | An **interpretation correction** — an observation that changes how an existing signal/metric/behavior should be *read*, with no action attached yet | Live observation contradicts assumed semantics | `observed` (terminal; often later cited as `triggered_by` of a DEC) |
 | **INC** | The **cause record** — a defect or design flaw found during live investigation: symptom, root cause, blast radius | Investigation finds the *why* behind observed behavior | `open` → remediated via DEC |
@@ -133,6 +133,7 @@ Every entry carries:
 - `id`: DEF-003
 - `date`: 2026-06-05
 - `status`: active
+- `priority`: P1 (optional on DEF from 2026-09-04; not backfilled). Operator-assigned rank. P1 = fix at an early stage; do not leave under a mountain of later code.
 - `triggered_by`: what surfaced the work and why it's justified-but-not-now
 - `decision`: What is deferred, and what proceeds in the meantime.
 - `rationale`: Why deferring is safe; what the interim costs are.
